@@ -104,8 +104,7 @@
 													   delegate:self 
 											  cancelButtonTitle:@"OK" 
 											  otherButtonTitles: nil];
-		[alert show];	
-		[alert release];
+		[alert show];
 	}
 	else {	
 		// Add the controller's view as a subview of the window
@@ -113,15 +112,7 @@
 		
 		NSOperationQueue * theQueue = [[NSOperationQueue alloc] init];
 		self.cryptoQueue = theQueue;
-		[theQueue release];
 	}
-}
-
-- (void)dealloc {
-    [cryptoQueue release];
-	[navController release];
-	[window release];
-	[super dealloc];
 }
 
 @end

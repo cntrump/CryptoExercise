@@ -69,16 +69,15 @@
     AppDelegate * appDelegate = (AppDelegate *)([UIApplication sharedApplication].delegate);
     NSInvocationOperation * genOp = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(generateKeyPairOperation) object:nil];
     [appDelegate.cryptoQueue addOperation:genOp];
-    [genOp release];
 }
 
 - (void)generateKeyPairOperation {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    // Generate the asymmetric key (public and private)
-    [[SecKeyWrapper sharedWrapper] generateKeyPair:kAsymmetricSecKeyPairModulusSize];
-    [[SecKeyWrapper sharedWrapper] generateSymmetricKey];
-    [self performSelectorOnMainThread:@selector(generateKeyPairCompleted) withObject:nil waitUntilDone:NO];
-    [pool release];
+    @autoreleasepool {
+        // Generate the asymmetric key (public and private)
+        [[SecKeyWrapper sharedWrapper] generateKeyPair:kAsymmetricSecKeyPairModulusSize];
+        [[SecKeyWrapper sharedWrapper] generateSymmetricKey];
+        [self performSelectorOnMainThread:@selector(generateKeyPairCompleted) withObject:nil waitUntilDone:NO];
+    }
 }
 
 - (void)generateKeyPairCompleted {
@@ -96,13 +95,5 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
-
-- (void)dealloc {
-	[spinner release];
-	[label release];
-	[server release];
-	[super dealloc];
-}
-
 
 @end

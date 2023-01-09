@@ -57,13 +57,7 @@
 
 @end
 
-@interface CryptoServerRequest : NSObject <NSStreamDelegate> {
-	NSInputStream * istr;
-	NSOutputStream * ostr;
-	NSString * peerName;
-	NSData * peerPublicKey;
-	NSObject <CryptoServerRequestDelegate, NSObject> * delegate;
-}
+@interface CryptoServerRequest : NSObject <NSStreamDelegate>
 
 @property (nonatomic, retain) NSInputStream * istr;
 @property (nonatomic, retain) NSOutputStream * ostr;

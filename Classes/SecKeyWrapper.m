@@ -140,18 +140,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
     return self;
 }
 
-- (id)retain {
-    return self;
-}
-
-- (id)autorelease {
-    return self;
-}
-
-- (NSUInteger)retainCount {
-    return UINT_MAX;
-}
-
 -(id)init {
 	 if (self = [super init])
 	 {
@@ -186,9 +174,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	// Delete the public key.
 	sanityCheck = SecItemDelete((CFDictionaryRef)queryPublicKey);
 	LOGGING_FACILITY1( sanityCheck == noErr || sanityCheck == errSecItemNotFound, @"Error removing public key, OSStatus == %d.", sanityCheck );
-	
-	[queryPrivateKey release];
-	[queryPublicKey release];
+
 	if (publicKeyRef) CFRelease(publicKeyRef);
 	if (privateKeyRef) CFRelease(privateKeyRef);
 }
@@ -206,9 +192,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	// Delete the symmetric key.
 	sanityCheck = SecItemDelete((CFDictionaryRef)querySymmetricKey);
 	LOGGING_FACILITY1( sanityCheck == noErr || sanityCheck == errSecItemNotFound, @"Error removing symmetric key, OSStatus == %d.", sanityCheck );
-	
-	[querySymmetricKey release];
-	[symmetricKeyRef release];
 }
 
 - (void)generateKeyPair:(NSUInteger)keySize {
@@ -247,10 +230,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	// SecKeyGeneratePair returns the SecKeyRefs just for educational purposes.
 	sanityCheck = SecKeyGeneratePair((CFDictionaryRef)keyPairAttr, &publicKeyRef, &privateKeyRef);
 	LOGGING_FACILITY( sanityCheck == noErr && publicKeyRef != NULL && privateKeyRef != NULL, @"Something really bad went wrong with generating the key pair." );
-	
-	[privateKeyAttr release];
-	[publicKeyAttr release];
-	[keyPairAttr release];
 }
 
 - (void)generateSymmetricKey {
@@ -296,7 +275,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	LOGGING_FACILITY1( sanityCheck == noErr || sanityCheck == errSecDuplicateItem, @"Problem storing the symmetric key in the keychain, OSStatus == %d.", sanityCheck );
 	
 	if (symmetricKey) free(symmetricKey);
-	[symmetricKeyAttr release];
 }
 
 - (SecKeyRef)addPeerPublicKey:(NSString *)peerName keyBits:(NSData *)publicKey {
@@ -337,9 +315,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	}
 	
 	LOGGING_FACILITY1( sanityCheck == noErr && peerKeyRef != NULL, @"Problem acquiring reference to the public key, OSStatus == %d.", sanityCheck );
-	
-	[peerTag release];
-	[peerPublicKeyAttr release];
+
 	if (persistPeer) CFRelease(persistPeer);
 	return peerKeyRef;
 }
@@ -359,9 +335,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	sanityCheck = SecItemDelete((CFDictionaryRef) peerPublicKeyAttr);
 	
 	LOGGING_FACILITY1( sanityCheck == noErr || sanityCheck == errSecItemNotFound, @"Problem deleting the peer public key to the keychain, OSStatus == %d.", sanityCheck );
-	
-	[peerTag release];
-	[peerPublicKeyAttr release];
 }
 
 - (NSData *)wrapSymmetricKey:(NSData *)symmetricKey keyRef:(SecKeyRef)publicKey {
@@ -678,8 +651,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 		{
 			publicKeyReference = NULL;
 		}
-		
-		[queryPublicKey release];
 	} else {
 		publicKeyReference = publicKeyRef;
 	}
@@ -689,7 +660,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 
 - (NSData *)getPublicKeyBits {
 	OSStatus sanityCheck = noErr;
-	NSData * publicKeyBits = nil;
+	CFTypeRef publicKeyBits = nil;
 	
 	NSMutableDictionary * queryPublicKey = [[NSMutableDictionary alloc] init];
 		
@@ -700,16 +671,14 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	[queryPublicKey setObject:[NSNumber numberWithBool:YES] forKey:(id)kSecReturnData];
 		
 	// Get the key bits.
-	sanityCheck = SecItemCopyMatching((CFDictionaryRef)queryPublicKey, (CFTypeRef *)&publicKeyBits);
+	sanityCheck = SecItemCopyMatching((CFDictionaryRef)queryPublicKey, &publicKeyBits);
 		
 	if (sanityCheck != noErr)
 	{
 		publicKeyBits = nil;
 	}
-		
-	[queryPublicKey release];
 	
-	return publicKeyBits;
+	return (__bridge NSData *)publicKeyBits;
 }
 
 - (SecKeyRef)getPrivateKeyRef {
@@ -732,8 +701,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 		{
 			privateKeyReference = NULL;
 		}
-		
-		[queryPrivateKey release];
 	} else {
 		privateKeyReference = privateKeyRef;
 	}
@@ -743,7 +710,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 
 - (NSData *)getSymmetricKeyBytes {
 	OSStatus sanityCheck = noErr;
-	NSData * symmetricKeyReturn = nil;
+    CFTypeRef symmetricKeyReturn = nil;
 	
 	if (self.symmetricKeyRef == nil) {
 		NSMutableDictionary * querySymmetricKey = [[NSMutableDictionary alloc] init];
@@ -755,20 +722,18 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 		[querySymmetricKey setObject:[NSNumber numberWithBool:YES] forKey:(id)kSecReturnData];
 		
 		// Get the key bits.
-		sanityCheck = SecItemCopyMatching((CFDictionaryRef)querySymmetricKey, (CFTypeRef *)&symmetricKeyReturn);
+		sanityCheck = SecItemCopyMatching((CFDictionaryRef)querySymmetricKey, &symmetricKeyReturn);
 		
 		if (sanityCheck == noErr && symmetricKeyReturn != nil) {
-			self.symmetricKeyRef = symmetricKeyReturn;
+			self.symmetricKeyRef = (__bridge NSData *)symmetricKeyReturn;
 		} else {
 			self.symmetricKeyRef = nil;
 		}
-		
-		[querySymmetricKey release];
 	} else {
-		symmetricKeyReturn = self.symmetricKeyRef;
+        symmetricKeyReturn = (__bridge CFTypeRef)self.symmetricKeyRef;
 	}
 
-	return symmetricKeyReturn;
+    return (__bridge NSData *)symmetricKeyReturn;
 }
 
 - (CFTypeRef)getPersistentKeyRefWithKeyRef:(SecKeyRef)keyRef {
@@ -780,13 +745,12 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
 	
 	// Set the PersistentKeyRef key query dictionary.
-	[queryKey setObject:(id)keyRef forKey:(id)kSecValueRef];
-	[queryKey setObject:[NSNumber numberWithBool:YES] forKey:(id)kSecReturnPersistentRef];
+	[queryKey setObject:(__bridge id)keyRef forKey:(__bridge id)kSecValueRef];
+	[queryKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
 	
 	// Get the persistent key reference.
 	sanityCheck = SecItemCopyMatching((CFDictionaryRef)queryKey, (CFTypeRef *)&persistentRef);
-	[queryKey release];
-	
+
 	return persistentRef;
 }
 
@@ -799,24 +763,18 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	NSMutableDictionary * queryKey = [[NSMutableDictionary alloc] init];
 	
 	// Set the SecKeyRef query dictionary.
-	[queryKey setObject:(id)persistentRef forKey:(id)kSecValuePersistentRef];
+	[queryKey setObject:(__bridge id)persistentRef forKey:(id)kSecValuePersistentRef];
 	[queryKey setObject:[NSNumber numberWithBool:YES] forKey:(id)kSecReturnRef];
 	
 	// Get the persistent key reference.
 	sanityCheck = SecItemCopyMatching((CFDictionaryRef)queryKey, (CFTypeRef *)&keyRef);
-	[queryKey release];
 	
 	return keyRef;
 }
 
 - (void)dealloc {
-    [privateTag release];
-    [publicTag release];
-	[symmetricTag release];
-	[symmetricKeyRef release];
 	if (publicKeyRef) CFRelease(publicKeyRef);
 	if (privateKeyRef) CFRelease(privateKeyRef);
-    [super dealloc];
 }
 
 #endif

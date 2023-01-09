@@ -69,8 +69,6 @@ NSString * const CryptoServerErrorDomain = @"CryptoServerErrorDomain";
 		[self setupServer:&thisError];
 		
 		LOGGING_FACILITY( thisError == nil, [thisError localizedDescription] );
-
-		[thisError release];
 	}
 	return self;
 }
@@ -84,7 +82,7 @@ NSString * const CryptoServerErrorDomain = @"CryptoServerErrorDomain";
 }
 
 static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
-    CryptoServer * server = (CryptoServer *)info;
+    CryptoServer * server = (__bridge CryptoServer *)info;
     if (kCFSocketAcceptCallBack == type) { 
         // for an AcceptCallBack, the data parameter is a pointer to a CFSocketNativeHandle
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
@@ -105,7 +103,7 @@ static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType 
         if (readStream && writeStream) {
             CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
             CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
-            [server handleConnection:peer inputStream:(NSInputStream *)readStream outputStream:(NSOutputStream *)writeStream];
+            [server handleConnection:peer inputStream:(__bridge NSInputStream *)readStream outputStream:(__bridge NSOutputStream *)writeStream];
         } else {
             // on any failure, need to destroy the CFSocketNativeHandle 
             // since we are not going to use it any more
@@ -128,7 +126,7 @@ static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType 
 	} else {
 	
 		if (!ipv4socket) {
-			CFSocketContext socketCtxt = {0, self, NULL, NULL, NULL};
+			CFSocketContext socketCtxt = {0, (__bridge void *)self, NULL, NULL, NULL};
 			self.ipv4socket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, (CFSocketCallBack)&CryptoServerAcceptCallBack, &socketCtxt);
 	
 			if (!ipv4socket) {
@@ -157,7 +155,7 @@ static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType 
 			
 			// now that the binding was successful, we get the port number 
 			// -- we will need it for the NSNetService
-			NSData * addr = [(NSData *)CFSocketCopyAddress(ipv4socket) autorelease];
+			NSData * addr = (__bridge NSData *)CFSocketCopyAddress(ipv4socket);
 			memcpy(&serverAddress, [addr bytes], [addr length]);
 			chosenPort = ntohs(serverAddress.sin_port);
 			
@@ -186,7 +184,6 @@ static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType 
 	[self setupServer:&thisError];
 	
 	LOGGING_FACILITY( thisError == nil, [thisError localizedDescription] );
-	[thisError release];
 	
 	[self.netService scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 	[self.netService publish];
@@ -207,8 +204,6 @@ static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType 
 			[newPeer runProtocol];
 			[self.connectionBag addObject:newPeer];
 		}
-
-		[newPeer release];
 	}
 }
 
@@ -239,8 +234,6 @@ static void CryptoServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType 
 
 - (void)dealloc {
 	[self teardown];
-	[connectionBag release];
-	[super dealloc];
 }
 
 @end

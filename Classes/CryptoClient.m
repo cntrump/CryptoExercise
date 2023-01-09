@@ -183,7 +183,6 @@
 			[message appendData:outData];
 	
 			[self.ostr write:[message bytes] maxLength:[message length]];
-			[message release];
 		}
 	}
 	
@@ -229,21 +228,14 @@
 		[[SecKeyWrapper sharedWrapper] removePeerPublicKey:peerName];
 	} else {
 		LOGGING_FACILITY( 0, error.debugDescription );
-		[error release];
 	}
 	
 	return verified;
 }
 
 -(void) dealloc {
-	[istr removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-	[istr release];
-	
+	[istr removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];	
 	[ostr removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-	[ostr release];
-	
-	[service release];
-	[super dealloc];
 }
 
 @end

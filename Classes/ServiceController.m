@@ -71,8 +71,7 @@
 
 - (void)setService:(NSNetService *)aService {
     [self.service stop];
-    [self.service release];
-    service = [aService retain];
+    service = aService;
 	[self.service setDelegate:self];
 	// Attempt to resolve the self.service. A value of 0.0 sets an unlimited time to resolve it. The user can
 	// choose to cancel the resolve by selecting another self.service in the table view.
@@ -101,7 +100,6 @@
 	CryptoClient * thisClient = [[CryptoClient alloc] initWithService:self.service delegate:self];
 	self.cryptoClient = thisClient;
 	[self.cryptoClient runConnection];
-	[thisClient release];
 }
 
 - (void)cryptoClientDidCompleteConnection:(CryptoClient *)cryptoClient {
@@ -126,16 +124,6 @@
     self.spinner.hidden = YES;
 	self.connectButton.enabled = YES;
 	self.cryptoClient = nil;
-}
-
-- (void)dealloc {
-	[serviceLabel release];
-	[connectButton release];
-	[spinner release];
-	[statusLog release];
-	[service release];
-	[cryptoClient release];
-	[super dealloc];
 }
 
 @end

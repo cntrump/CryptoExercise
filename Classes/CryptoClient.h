@@ -62,13 +62,7 @@
 
 @end
 
-@interface CryptoClient : NSObject <NSStreamDelegate> {
-	NSNetService * service;
-	NSInputStream * istr;
-	NSOutputStream * ostr;
-	NSObject <CryptoClientDelegate, NSObject> * delegate;
-	BOOL isConnected;
-}
+@interface CryptoClient : NSObject <NSStreamDelegate>
 
 @property (nonatomic, retain) NSNetService * service;
 @property (nonatomic, assign) NSObject <CryptoClientDelegate, NSObject> * delegate;

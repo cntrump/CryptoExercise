@@ -61,7 +61,6 @@
 - (void)viewDidLoad {
     NSMutableArray *anArray = [[NSMutableArray alloc] init];
     self.services = anArray;
-    [anArray release];
 	
 	// Check to see if keys have been generated.
     if (	![[SecKeyWrapper sharedWrapper] getPublicKeyRef]		|| 
@@ -75,12 +74,11 @@
 	CryptoServer * thisServer = [[CryptoServer alloc] init];
 	self.cryptoServer = thisServer;
 	[self.cryptoServer run];
-	[thisServer release];
 }
 
 - (KeyGeneration *)keyGenerationController {
     if (keyGenerationController == nil) {
-        self.keyGenerationController = [[[KeyGeneration alloc] initWithNibName:@"KeyGeneration" bundle:nil] autorelease];
+        self.keyGenerationController = [[KeyGeneration alloc] initWithNibName:@"KeyGeneration" bundle:nil];
     }
     return keyGenerationController;
 }
@@ -113,7 +111,6 @@
 	NSNetServiceBrowser * aNetServiceBrowser = [[NSNetServiceBrowser alloc] init];
 	aNetServiceBrowser.delegate = self;
 	self.netServiceBrowser = aNetServiceBrowser;
-	[aNetServiceBrowser release];
     
 	[self.netServiceBrowser searchForServicesOfType:kBonjourServiceType inDomain:@"local"];
     
@@ -150,7 +147,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"MyCell"];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MyCell"] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MyCell"];
     }
     cell.textLabel.text = [[services objectAtIndex:indexPath.row] name];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -166,16 +163,5 @@
 - (void)viewDidAppear:(BOOL)animated {
     [self searchForCryptoServices];
 }
-
-- (void)dealloc {
-	[netServiceBrowser release];
-	[services release];
-	[tableView release];
-	[serviceController release];
-	[keyGenerationController release];
-	[cryptoServer release];
-	[super dealloc];
-}
-
 
 @end

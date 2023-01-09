@@ -190,7 +190,6 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 			[message appendData:outData];
 			
 			[self.ostr write:[message bytes] maxLength:[message length]];
-			[message release];
 		}
 	}
 	
@@ -244,25 +243,14 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 		LOGGING_FACILITY(0, @"Could not establish client handle to public key.");
 	}
 	
-	[messageHolder release];
-	
 	LOGGING_FACILITY( error == nil, error.debugDescription );
-	[error release];
 
 	return message;
 }
 
 - (void)dealloc {
 	[istr removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-	[istr release];
-	
 	[ostr removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-	[ostr release];
-	
-	[peerName release];
-	[peerPublicKey release];
-	
-	[super dealloc];
 }
 
 @end
