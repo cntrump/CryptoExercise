@@ -49,7 +49,7 @@
 #import <UIKit/UIKit.h>
 #import "CryptoServerRequest.h"
 
-NSString * const CryptoServerErrorDomain;
+extern NSString * const CryptoServerErrorDomain;
 
 typedef enum {
     kCryptoServerCouldNotBindToIPv4Address = 1,
@@ -58,7 +58,7 @@ typedef enum {
 	kCryptoServerCouldNotBindOrEstablishNetService = 4
 } CryptoServerErrorCode;
 
-@interface CryptoServer : NSObject <CryptoServerRequestDelegate> {
+@interface CryptoServer : NSObject <CryptoServerRequestDelegate, NSNetServiceDelegate> {
 	NSMutableSet * connectionBag;
 	NSNetService * netService;
 	CFSocketRef ipv4socket;

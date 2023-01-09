@@ -51,7 +51,7 @@
 
 @class SecKeyWrapper;
 
-@interface ServiceController : UIViewController <CryptoClientDelegate> {
+@interface ServiceController : UIViewController <CryptoClientDelegate, NSNetServiceDelegate> {
     NSNetService * service;
 	CryptoClient * cryptoClient;
     IBOutlet UILabel * serviceLabel;

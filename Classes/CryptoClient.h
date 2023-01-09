@@ -62,7 +62,7 @@
 
 @end
 
-@interface CryptoClient : NSObject {
+@interface CryptoClient : NSObject <NSStreamDelegate> {
 	NSNetService * service;
 	NSInputStream * istr;
 	NSOutputStream * ostr;

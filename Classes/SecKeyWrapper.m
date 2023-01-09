@@ -140,9 +140,6 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
     return self;
 }
 
-- (void)release {
-}
-
 - (id)retain {
     return self;
 }
@@ -219,7 +216,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	publicKeyRef = NULL;
 	privateKeyRef = NULL;
 	
-	LOGGING_FACILITY1( keySize == 512 || keySize == 1024 || keySize == 2048, @"%d is an invalid and unsupported key size.", keySize );
+	LOGGING_FACILITY1( keySize == 512 || keySize == 1024 || keySize == 2048, @"%ld is an invalid and unsupported key size.", keySize );
 	
 	// First delete current keys.
 	[self deleteAsymmetricKeys];
@@ -465,7 +462,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 	// Initialize the context.
 	CC_SHA1_Init(&ctx);
 	// Perform the hash.
-	CC_SHA1_Update(&ctx, (void *)[plainText bytes], [plainText length]);
+	CC_SHA1_Update(&ctx, (void *)[plainText bytes], (CC_LONG)[plainText length]);
 	// Finalize the output.
 	CC_SHA1_Final(hashBytes, &ctx);
 	

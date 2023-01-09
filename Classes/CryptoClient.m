@@ -90,7 +90,7 @@
 					NSData * publicKey = [[SecKeyWrapper sharedWrapper] getPublicKeyBits];
 					retLen = [self sendData:publicKey];
 					
-					LOGGING_FACILITY1( retLen == [publicKey length], @"Attempt to send public key failed, only sent %d bytes.", retLen );
+                    LOGGING_FACILITY1( retLen == [publicKey length], @"Attempt to send public key failed, only sent %zu bytes.", retLen );
 					
 					[self.ostr close];
 				}
@@ -147,7 +147,7 @@
 }
 
 - (NSData *)receiveData {
-	int len = 0;
+	NSInteger len = 0;
 	size_t lengthByte = 0;
 	NSMutableData * retBlob = nil;
 	
@@ -192,7 +192,7 @@
 
 - (BOOL)verifyBlob:(NSData *)blob {
 	NSMutableDictionary * message = nil;
-	NSString * error = nil;
+    NSError * error = nil;
 	NSString * peerName = nil;
 	BOOL verified = NO;
 	CCOptions pad = 0;
@@ -200,7 +200,7 @@
 	
 	peerName = [self.service name];
 	
-	message = [NSPropertyListSerialization propertyListFromData:blob mutabilityOption:NSPropertyListMutableContainers format:nil errorDescription:&error];
+    message = [NSPropertyListSerialization propertyListWithData:blob options:NSPropertyListMutableContainers format:nil error:&error];
 	
 	if (!error) {
 		
@@ -228,7 +228,7 @@
 		// Clean up by removing the peer public key.
 		[[SecKeyWrapper sharedWrapper] removePeerPublicKey:peerName];
 	} else {
-		LOGGING_FACILITY( 0, error );
+		LOGGING_FACILITY( 0, error.debugDescription );
 		[error release];
 	}
 	

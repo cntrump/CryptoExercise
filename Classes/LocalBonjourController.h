@@ -50,7 +50,7 @@
 @class ServiceController, KeyGeneration, CryptoServer;
 
 
-@interface LocalBonjourController : UIViewController {
+@interface LocalBonjourController : UIViewController <NSNetServiceBrowserDelegate> {
 	NSNetServiceBrowser * netServiceBrowser;
 	NSMutableArray * services;
     UITableView * tableView;

@@ -95,12 +95,11 @@
 - (IBAction)regenerateKeys {
     KeyGeneration *controller = self.keyGenerationController;
     controller.server = cryptoServer;
-    [self.navigationController presentModalViewController:controller animated:YES];
+    [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	// Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+	return UIInterfaceOrientationMaskPortrait;
 }
 
 // Creates an NSNetServiceBrowser that searches for services of a particular type in a particular domain.

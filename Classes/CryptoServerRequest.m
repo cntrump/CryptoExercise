@@ -145,7 +145,7 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 		LOGGING_FACILITY(0, @"Something wrong with the building of the crypto blob.\n");
 	}
 	
-	LOGGING_FACILITY1( sentBytes == [cryptoBlob length], @"Only sent %d bytes of crypto blob.", sentBytes );
+    LOGGING_FACILITY1( sentBytes == [cryptoBlob length], @"Only sent %zu bytes of crypto blob.", sentBytes );
 	
 	[self.ostr close];
 	
@@ -154,7 +154,7 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 }
 
 - (NSData *)receiveData {
-	int len = 0;
+	NSInteger len = 0;
 	size_t lengthByte = 0;
 	NSMutableData * retBlob = nil;
 	
@@ -199,7 +199,7 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 
 - (NSData *)createBlob:(NSString *)peer peerPublicKey:(NSData *)peerKey {
 	NSData * message = nil;
-	NSString * error = nil;
+	NSError * error = nil;
 	CCOptions pad = 0;
 	SecKeyRef peerPublicKeyRef = NULL;
 	
@@ -236,7 +236,7 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 		[messageHolder	setObject:[[SecKeyWrapper sharedWrapper] wrapSymmetricKey:symmetricKey keyRef:peerPublicKeyRef]
 						  forKey:[NSString stringWithUTF8String:(const char *)kSymTag]];
 		
-		message = [NSPropertyListSerialization dataFromPropertyList:messageHolder format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
+        message = [NSPropertyListSerialization dataWithPropertyList:messageHolder format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
 		
 		// All done. Time to remove the public key from the keychain.
 		[[SecKeyWrapper sharedWrapper] removePeerPublicKey:peer];
@@ -246,7 +246,7 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 	
 	[messageHolder release];
 	
-	LOGGING_FACILITY( error == nil, error );
+	LOGGING_FACILITY( error == nil, error.debugDescription );
 	[error release];
 
 	return message;

@@ -57,7 +57,7 @@
 
 @end
 
-@interface CryptoServerRequest : NSObject {
+@interface CryptoServerRequest : NSObject <NSStreamDelegate> {
 	NSInputStream * istr;
 	NSOutputStream * ostr;
 	NSString * peerName;
