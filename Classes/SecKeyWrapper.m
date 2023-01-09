@@ -120,7 +120,7 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
 + (SecKeyWrapper *)sharedWrapper {
     @synchronized(self) {
         if (__sharedKeyWrapper == nil) {
-            [[self alloc] init];
+            __sharedKeyWrapper = [[self alloc] init];
         }
     }
     return __sharedKeyWrapper;
@@ -130,17 +130,16 @@ static SecKeyWrapper * __sharedKeyWrapper = nil;
     @synchronized(self) {
         if (__sharedKeyWrapper == nil) {
             __sharedKeyWrapper = [super allocWithZone:zone];
-            return __sharedKeyWrapper;
         }
     }
-    return nil;
+    return __sharedKeyWrapper;
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
     return self;
 }
 
--(id)init {
+- (instancetype)init {
 	 if (self = [super init])
 	 {
 		 // Tag data to search for keys.

@@ -58,17 +58,13 @@ typedef enum {
 	kCryptoServerCouldNotBindOrEstablishNetService = 4
 } CryptoServerErrorCode;
 
-@interface CryptoServer : NSObject <CryptoServerRequestDelegate, NSNetServiceDelegate> {
-	NSMutableSet * connectionBag;
-	NSNetService * netService;
-	CFSocketRef ipv4socket;
-}
+@interface CryptoServer : NSObject <CryptoServerRequestDelegate, NSNetServiceDelegate>
 
-@property (nonatomic, retain) NSNetService * netService;
-@property (nonatomic, retain) NSMutableSet * connectionBag;
+@property (nonatomic) NSNetService * netService;
+@property (nonatomic) NSMutableSet * connectionBag;
 @property (assign) CFSocketRef ipv4socket;
 
-- (id)init;
+- (instancetype)init;
 - (void)run;
 - (void)setupServer:(NSError **)error;
 - (void)handleConnection:(NSString *)peerName inputStream:(NSInputStream *)readStream outputStream:(NSOutputStream *)writeStream;

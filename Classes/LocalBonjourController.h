@@ -50,21 +50,14 @@
 @class ServiceController, KeyGeneration, CryptoServer;
 
 
-@interface LocalBonjourController : UIViewController <NSNetServiceBrowserDelegate> {
-	NSNetServiceBrowser * netServiceBrowser;
-	NSMutableArray * services;
-    UITableView * tableView;
-    ServiceController * serviceController;
-	KeyGeneration * keyGenerationController;
-	CryptoServer * cryptoServer;
-}
+@interface LocalBonjourController : UIViewController <NSNetServiceBrowserDelegate>
 
-@property (nonatomic, retain) NSNetServiceBrowser * netServiceBrowser;
-@property (nonatomic, retain) NSMutableArray * services;
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) ServiceController *serviceController;
-@property (nonatomic, retain) KeyGeneration * keyGenerationController;
-@property (nonatomic, retain) CryptoServer * cryptoServer;
+@property (nonatomic) NSNetServiceBrowser * netServiceBrowser;
+@property (nonatomic) NSMutableArray * services;
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic) ServiceController *serviceController;
+@property (nonatomic) KeyGeneration * keyGenerationController;
+@property (nonatomic) CryptoServer * cryptoServer;
 
 - (KeyGeneration *)keyGenerationController;
 - (IBAction)regenerateKeys;

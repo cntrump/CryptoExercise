@@ -51,21 +51,14 @@
 
 @class SecKeyWrapper;
 
-@interface ServiceController : UIViewController <CryptoClientDelegate, NSNetServiceDelegate> {
-    NSNetService * service;
-	CryptoClient * cryptoClient;
-    IBOutlet UILabel * serviceLabel;
-    IBOutlet UIButton * connectButton;
-    IBOutlet UIActivityIndicatorView * spinner;
-    IBOutlet UITextView * statusLog;
-}
+@interface ServiceController : UIViewController <CryptoClientDelegate, NSNetServiceDelegate>
 
-@property (nonatomic, retain) NSNetService * service;
-@property (nonatomic, retain) CryptoClient * cryptoClient;
-@property (nonatomic, retain) UILabel * serviceLabel;
-@property (nonatomic, retain) UIButton * connectButton;
-@property (nonatomic, retain) UIActivityIndicatorView * spinner;
-@property (nonatomic, retain) UITextView * statusLog;
+@property (nonatomic) NSNetService * service;
+@property (nonatomic) CryptoClient * cryptoClient;
+@property (nonatomic, weak) IBOutlet UILabel * serviceLabel;
+@property (nonatomic, weak) IBOutlet UIButton * connectButton;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView * spinner;
+@property (nonatomic, weak) IBOutlet UITextView * statusLog;
 
 - (IBAction)connect;
 - (void)setService:(NSNetService *)aService;

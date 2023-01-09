@@ -61,7 +61,7 @@
 
 @synthesize service, istr, ostr, delegate, isConnected;
 
-- (id)initWithService:(NSNetService *)serviceInstance delegate:(NSObject <CryptoClientDelegate, NSObject> *)anObject {
+- (instancetype)initWithService:(NSNetService *)serviceInstance delegate:(NSObject <CryptoClientDelegate, NSObject> *)anObject {
 	if (self = [super init]) {
 		self.service = serviceInstance;
         self.delegate = anObject;

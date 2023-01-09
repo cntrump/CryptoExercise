@@ -48,15 +48,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : NSObject {
-	IBOutlet UIWindow * window;
-    IBOutlet UINavigationController * navController;
-	NSOperationQueue * cryptoQueue;
-}
+@interface AppDelegate : NSObject
 
-@property (nonatomic, retain) UIWindow * window;
-@property (nonatomic, retain) UINavigationController * navController;
-@property (retain) NSOperationQueue * cryptoQueue;
+@property (nonatomic, weak) IBOutlet UIWindow * window;
+@property (nonatomic, weak) IBOutlet UINavigationController * navController;
+@property NSOperationQueue * cryptoQueue;
 
 @end
 

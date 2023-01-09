@@ -76,19 +76,15 @@
 #define kSymmetricKeyTag		"com.apple.sample.symmetrickey"
 
 @interface SecKeyWrapper : NSObject {
-	NSData * publicTag;
-	NSData * privateTag;
-	NSData * symmetricTag;
 	CCOptions typeOfSymmetricOpts;
 	SecKeyRef publicKeyRef;
 	SecKeyRef privateKeyRef;
-	NSData * symmetricKeyRef;
 }
 
-@property (nonatomic, retain) NSData * publicTag;
-@property (nonatomic, retain) NSData * privateTag;
-@property (nonatomic, retain) NSData * symmetricTag;
-@property (nonatomic, retain) NSData * symmetricKeyRef;
+@property (nonatomic) NSData * publicTag;
+@property (nonatomic) NSData * privateTag;
+@property (nonatomic) NSData * symmetricTag;
+@property (nonatomic) NSData * symmetricKeyRef;
 
 + (SecKeyWrapper *)sharedWrapper;
 - (void)generateKeyPair:(NSUInteger)keySize;

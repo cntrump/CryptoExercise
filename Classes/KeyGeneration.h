@@ -50,15 +50,11 @@
 
 @class CryptoServer;
 
-@interface KeyGeneration : UIViewController {
-    IBOutlet UIActivityIndicatorView * spinner;
-    IBOutlet UILabel * label;
-    CryptoServer *server;
-}
+@interface KeyGeneration : UIViewController
 
-@property (nonatomic, retain) UIActivityIndicatorView * spinner;
-@property (nonatomic, retain) UILabel * label;
-@property (nonatomic, retain) CryptoServer * server;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView * spinner;
+@property (nonatomic, weak) IBOutlet UILabel * label;
+@property (nonatomic) CryptoServer * server;
 
 - (IBAction)startGeneratingKeys;
 - (IBAction)cancelKeyGeneration;

@@ -62,7 +62,7 @@ NSString * const CryptoServerErrorDomain = @"CryptoServerErrorDomain";
 
 @synthesize netService, connectionBag, ipv4socket;
 
-- (id)init {
+- (instancetype)init {
 	if (self = [super init]) {
 		self.connectionBag = [[NSMutableSet alloc] init];
 		NSError * thisError = nil;

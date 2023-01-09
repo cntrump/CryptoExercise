@@ -62,7 +62,7 @@ static const uint8_t kMessageBodyBytes[] = kMessageBody;
 
 @synthesize istr, ostr, peerName, peerPublicKey, delegate;
 
-- (id)initWithInputStream:(NSInputStream *)readStream 
+- (instancetype)initWithInputStream:(NSInputStream *)readStream 
 			 outputStream:(NSOutputStream *)writeStream 
 					 peer:(NSString *)peerAddress 
 				 delegate:(NSObject <CryptoServerRequestDelegate, NSObject> *)anObject {

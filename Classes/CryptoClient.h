@@ -64,13 +64,13 @@
 
 @interface CryptoClient : NSObject <NSStreamDelegate>
 
-@property (nonatomic, retain) NSNetService * service;
-@property (nonatomic, assign) NSObject <CryptoClientDelegate, NSObject> * delegate;
-@property (nonatomic, retain) NSInputStream * istr;
-@property (nonatomic, retain) NSOutputStream * ostr;
+@property (nonatomic) NSNetService * service;
+@property (nonatomic, weak) NSObject <CryptoClientDelegate, NSObject> * delegate;
+@property (nonatomic) NSInputStream * istr;
+@property (nonatomic) NSOutputStream * ostr;
 @property (nonatomic) BOOL isConnected;
 
-- (id)initWithService:(NSNetService *)serviceInstance delegate:(NSObject <CryptoClientDelegate, NSObject> *)anObject;
+- (instancetype)initWithService:(NSNetService *)serviceInstance delegate:(NSObject <CryptoClientDelegate, NSObject> *)anObject;
 - (NSData *)receiveData;
 - (NSUInteger)sendData:(NSData *)outData;
 - (void)runConnection;

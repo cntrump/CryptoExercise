@@ -52,7 +52,7 @@
 
 @synthesize service, cryptoClient, serviceLabel, connectButton, spinner, statusLog;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
 	}
 	return self;
